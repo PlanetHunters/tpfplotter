@@ -145,7 +145,7 @@ def get_gaia_data(ra, dec):
     from astroquery.vizier import Vizier
     Vizier.ROW_LIMIT = -1
     result = Vizier.query_region(c1, catalog=["I/345/gaia2"],
-                                 radius=Angle(10., "arcsec"))
+                                 radius=Angle(40., "arcsec"))
     try:
     	result = result["I/345/gaia2"]
     except:
