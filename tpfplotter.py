@@ -52,7 +52,7 @@ def cli():
     args = parser.parse_args()
     return args
 
-def add_gaia_figure_elements(tpf, magnitude_limit=18,targ_mag=10.):
+def add_gaia_figure_elements(tpf, magnitude_limit=18,targ_mag=10., catalog=["I/345/gaiaedr3", "EDR3"]):
     """Make the Gaia Figure Elements"""
     # Get the positions of the Gaia sources
     c1 = SkyCoord(tpf.ra, tpf.dec, frame='icrs', unit='deg')
@@ -63,7 +63,7 @@ def add_gaia_figure_elements(tpf, magnitude_limit=18,targ_mag=10.):
     # We are querying with a diameter as the radius, overfilling by 2x.
     from astroquery.vizier import Vizier
     Vizier.ROW_LIMIT = -1
-    result = Vizier.query_region(c1, catalog=["I/345/gaia2"],
+    result = Vizier.query_region(c1, catalog=[catalog[0]],
                                  radius=Angle(np.max(tpf.shape[1:]) * pix_scale, "arcsec"))
     no_targets_found_message = ValueError('Either no sources were found in the query region '
                                           'or Vizier is unavailable')
@@ -72,7 +72,7 @@ def add_gaia_figure_elements(tpf, magnitude_limit=18,targ_mag=10.):
         raise no_targets_found_message
     elif len(result) == 0:
         raise too_few_found_message
-    result = result["I/345/gaia2"].to_pandas()
+    result = result[catalog[0]].to_pandas()
     result = result[result.Gmag < magnitude_limit]
     if len(result) == 0:
         raise no_targets_found_message
@@ -131,7 +131,7 @@ def plot_orientation(tpf):
 
 
 
-def get_gaia_data(ra, dec):
+def get_gaia_data(ra, dec, search_radius=40., catalog=["I/345/gaiaedr3", "EDR3"]):
     """
     Get Gaia parameters
 
@@ -144,12 +144,12 @@ def get_gaia_data(ra, dec):
     # We are querying with a diameter as the radius, overfilling by 2x.
     from astroquery.vizier import Vizier
     Vizier.ROW_LIMIT = -1
-    result = Vizier.query_region(c1, catalog=["I/345/gaia2"],
-                                 radius=Angle(40., "arcsec"))
+    result = Vizier.query_region(c1, catalog=[catalog[0]],
+                                 radius=Angle(search_radius, "arcsec"))
     try:
-    	result = result["I/345/gaia2"]
+    	result = result[catalog[0]]
     except:
-    	print('Not in Gaia DR2. If you know the Gaia ID and Gmag, try the options --gid and --gmag.')
+    	print('Not in Gaia ' + catalog[1] + '. If you know the Gaia ID and Gmag, try the options --gid and --gmag.')
     	print('Exiting without finishing...')
     	sys.exit()
 
