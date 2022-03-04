@@ -52,7 +52,7 @@ def cli():
     args = parser.parse_args()
     return args
 
-def add_gaia_figure_elements(tpf, magnitude_limit=18,targ_mag=10., catalog=["I/345/gaiaedr3", "EDR3"]):
+def add_gaia_figure_elements(tpf, magnitude_limit=18,targ_mag=10., catalog=["I/350/gaiaedr3", "EDR3"]):
     """Make the Gaia Figure Elements"""
     # Get the positions of the Gaia sources
     c1 = SkyCoord(tpf.ra, tpf.dec, frame='icrs', unit='deg')
@@ -131,7 +131,7 @@ def plot_orientation(tpf):
 
 
 
-def get_gaia_data(ra, dec, search_radius=40., catalog=["I/345/gaiaedr3", "EDR3"]):
+def get_gaia_data(ra, dec, search_radius=40., catalog=["I/350/gaiaedr3", "EDR3"]):
     """
     Get Gaia parameters
 
